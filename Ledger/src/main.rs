@@ -1,14 +1,11 @@
-use std::vec;
 use chrono::{DateTime, Utc};
 use rust_decimal::{Decimal};
-use vec::Vec;
+mod purchase;
 
 fn main() {
     println!("Hello, world!");
 
-    let test = Institution {
-        name: "".to_string(),
-    };
+    let test2 = purchase::create("name".to_string(), None, Utc::now());
 }
 
 struct Institution {
@@ -34,7 +31,19 @@ struct Merchant<'a> {
     address: Option<String>,
 }
 
+
+
+
 struct Charge<'a> {
+    name: String,
+    date_merchant_processed: DateTime<Utc>,
+    date_account_processed: DateTime<Utc>,
+    account: &'a Account<'a>,
+    purchase: &'a purchase::Purchase<'a>,
+    amount: Decimal,
+}
+
+struct ChargeData<'a> {
     name: String,
     date_merchant_processed: DateTime<Utc>,
     date_account_processed: DateTime<Utc>,
@@ -44,23 +53,21 @@ struct Charge<'a> {
 
 struct Expense<'a> {
     name: String,
-    budget: Budget,
-    purchase: Purchase<'a>,
+    budget: &'a Budget,
+    purchase: &'a purchase::Purchase<'a>,
     amount: Decimal,
 }
 
-struct Purchase<'a> {
+struct ExpenseData<'a> {
     name: String,
-    merchant: Option<&'a Merchant<'a>>,
-    date: DateTime<Utc>,
-    charges: Vec<Charge<'a>>,
-    expenses: Vec<Expense<'a>>
+    budget: &'a Budget,
+    amount: Decimal,
 }
 
 struct Item<'a> {
     name: String,
     notes: String,
-    purchase: Purchase<'a>,
+    purchase: purchase::Purchase<'a>,
 
     date_order_processed: Option<DateTime<Utc>>,
     date_shipped: Option<DateTime<Utc>>,
@@ -94,4 +101,9 @@ struct Income<'a> {
     account: &'a Account<'a>,
     date: DateTime<Utc>,
     amount: Decimal
+}
+
+enum Transaction<'a> {
+    Income(Income<'a>),
+    Expense(Expense<'a>),
 }
