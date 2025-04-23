@@ -5,6 +5,10 @@ use vec::Vec;
 
 fn main() {
     println!("Hello, world!");
+
+    let test = Institution {
+        name: "".to_string(),
+    };
 }
 
 struct Institution {
