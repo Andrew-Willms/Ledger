@@ -1,6 +1,7 @@
+use std::cell::RefCell;
+use std::rc::Rc;
 use chrono::{DateTime, Utc};
 use crate::{Charge, ChargeData, Expense, ExpenseData, Merchant, Transaction};
-use crate::Transaction::Expense;
 
 pub(crate) struct Purchase<'a> {
     name: String,
@@ -23,35 +24,41 @@ pub fn create<'a>(name: String, merchant: Option<&'a Merchant<'a>>, date: DateTi
     }
 }
 
-impl Purchase<'_> {
+impl<'a> Purchase<'a> {
 
-    pub fn add_charge(&mut self, charge_data: ChargeData) {
+    pub fn add_charge(self, charge_data: ChargeData<'a>) {
 
+        let shared_pointer = Rc::new(RefCell::new(self));
+        let shared_pointer2 = shared_pointer.clone();
+        
         let charge = Charge {
             name: charge_data.name,
             date_merchant_processed: charge_data.date_account_processed,
             date_account_processed: charge_data.date_account_processed,
             account: charge_data.account,
-            purchase: self,
+            purchase: shared_pointer,
             amount: charge_data.amount,
         };
 
-        self.charges.push(charge);
+        shared_pointer2.borrow_mut().charges.push(charge);
     }
 
-    pub fn add_expense(&mut self, expense_data: ExpenseData) {
+    pub fn add_expense(self, expense_data: ExpenseData<'a>) {
 
+        let shared_pointer = Rc::new(RefCell::new(self));
+        let shared_pointer2 = shared_pointer.clone();
+        
         let expense = Expense {
             name: expense_data.name,
             budget: expense_data.budget,
-            purchase: self,
+            purchase: shared_pointer,
             amount: expense_data.amount,
         };
 
-        self.expenses.push(expense);
+        shared_pointer2.borrow_mut().expenses.push(expense);
     }
 
-    pub fn add_associated_transaction(&mut self) {
-
+    pub fn add_associated_transaction(mut self, transaction: Transaction<'a>) {
+        self.associated_transactions.push(transaction);
     }
 }

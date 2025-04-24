@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+use std::rc::Rc;
 use chrono::{DateTime, Utc};
 use rust_decimal::{Decimal};
 mod purchase;
@@ -6,6 +8,29 @@ fn main() {
     println!("Hello, world!");
 
     let test2 = purchase::create("name".to_string(), None, Utc::now());
+
+    let account = Account { name: "account name".to_string(), institution: None };
+    let budget = Budget { name: "budget name".to_string() };
+
+    let charge_data = ChargeData{
+        name: "charge name".to_string(),
+        date_merchant_processed: Utc::now(),
+        date_account_processed: Utc::now(),
+        account: &account,
+        amount: Decimal::new(1, 0),
+    };
+
+    test2.add_charge(charge_data);
+
+    let expenseData = ExpenseData{
+        name: "".to_string(),
+        budget: &budget,
+        amount: Decimal::new(1, 0),
+    };
+
+    test2.add_expense(expenseData);
+
+    //test2.add_expense(expenseData);
 }
 
 struct Institution {
@@ -39,7 +64,7 @@ struct Charge<'a> {
     date_merchant_processed: DateTime<Utc>,
     date_account_processed: DateTime<Utc>,
     account: &'a Account<'a>,
-    purchase: &'a purchase::Purchase<'a>,
+    purchase: Rc<RefCell<purchase::Purchase<'a>>>,
     amount: Decimal,
 }
 
@@ -54,7 +79,7 @@ struct ChargeData<'a> {
 struct Expense<'a> {
     name: String,
     budget: &'a Budget,
-    purchase: &'a purchase::Purchase<'a>,
+    purchase: Rc<RefCell<purchase::Purchase<'a>>>,
     amount: Decimal,
 }
 
