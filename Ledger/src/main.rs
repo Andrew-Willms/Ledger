@@ -9,12 +9,10 @@ mod purchase;
 fn main() {
     println!("Hello, world!");
 
-    let test_purchase: Purchase = purchase::create("name".to_string(), None, Utc::now());
+    let test_purchase = purchase::create("name".to_string(), None, Utc::now());
 
-    let mut account = Account { name: "account name".to_string(), institution: None };
+    let account = Account { name: "account name".to_string(), institution: None };
     let budget = Budget { name: "budget name".to_string() };
-
-    account.name = "test".to_string();
 
     let charge_data = ChargeData {
         name: "charge name".to_string(),
@@ -30,8 +28,8 @@ fn main() {
         amount: Decimal::new(1, 0),
     };
 
-    test_purchase.add_charge(charge_data);
-    test_purchase.add_expense(expense_data);
+    purchase::add_charge(test_purchase.clone(), charge_data);
+    purchase::add_expense(test_purchase.clone(), expense_data);
 }
 
 struct Institution {
@@ -65,7 +63,7 @@ struct Charge<'a> {
     date_merchant_processed: DateTime<Utc>,
     date_account_processed: DateTime<Utc>,
     account: &'a Account<'a>,
-    purchase: Rc<RefCell<&'a mut Purchase<'a>>>,
+    purchase: Rc<RefCell<Purchase<'a>>>,
     amount: Decimal,
 }
 
@@ -80,7 +78,7 @@ struct ChargeData<'a> {
 struct Expense<'a> {
     name: String,
     budget: &'a Budget,
-    purchase: Rc<RefCell<&'a mut Purchase<'a>>>,
+    purchase: Rc<RefCell<Purchase<'a>>>,
     amount: Decimal,
 }
 
@@ -93,7 +91,7 @@ struct ExpenseData<'a> {
 struct Item<'a> {
     name: String,
     notes: String,
-    purchase: purchase::Purchase<'a>,
+    purchase: Purchase<'a>,
 
     date_order_processed: Option<DateTime<Utc>>,
     date_shipped: Option<DateTime<Utc>>,
