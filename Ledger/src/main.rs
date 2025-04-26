@@ -39,7 +39,7 @@ struct Institution {
 
 struct Account<'a> {
 	name: String,
-	institution: Option<&'a Institution>,
+	institution: Option<&'a Institution>
 }
 
 struct Budget {
@@ -47,13 +47,13 @@ struct Budget {
 }
 
 struct MerchantFamily {
-	name: String,
+	name: String
 }
 
 struct Merchant<'a> {
 	name: String,
 	merchant_family: Option<&'a MerchantFamily>,
-	address: Option<String>,
+	address: Option<String>
 }
 
 
@@ -65,7 +65,7 @@ struct Charge<'a> {
 	date_account_processed: DateTime<Utc>,
 	account: &'a Account<'a>,
 	purchase: Rc<RefCell<Purchase<'a>>>,
-	amount: Decimal,
+	amount: Decimal
 }
 
 struct ChargeData<'a> {
@@ -73,20 +73,20 @@ struct ChargeData<'a> {
 	date_merchant_processed: DateTime<Utc>,
 	date_account_processed: DateTime<Utc>,
 	account: &'a Account<'a>,
-	amount: Decimal,
+	amount: Decimal
 }
 
 struct Expense<'a> {
 	name: String,
 	budget: &'a Budget,
 	purchase: Rc<RefCell<Purchase<'a>>>,
-	amount: Decimal,
+	amount: Decimal
 }
 
 struct ExpenseData<'a> {
 	name: String,
 	budget: &'a Budget,
-	amount: Decimal,
+	amount: Decimal
 }
 
 struct Item<'a> {
@@ -100,7 +100,7 @@ struct Item<'a> {
 
 	regular_price: Decimal,
 	sale_price: Decimal,
-	effective_price: Decimal,
+	effective_price: Decimal
 }
 
 struct Transfer<'a> {
@@ -118,7 +118,7 @@ struct TransferBudget {
 	date: DateTime<Utc>,
 	source_budget: Budget,
 	destination_budget: Budget,
-	amount: Decimal,
+	amount: Decimal
 }
 
 struct Income<'a> {
@@ -130,5 +130,5 @@ struct Income<'a> {
 
 enum Transaction<'a> {
 	Income(Income<'a>),
-	Expense(Expense<'a>),
+	Expense(Expense<'a>)
 }

@@ -26,17 +26,17 @@ pub fn create<'a>(name: String, merchant: Option<&'a Merchant<'a>>, date: DateTi
 	Rc::new(RefCell::new(purchase))
 }
 
-pub trait PurchaseStuff {
-	fn add_charge(self, charge_data: ChargeData);
-	fn add_expense(self, expense_data: ExpenseData);
-	fn add_associated_transaction(self, transaction: Transaction);
+pub trait PurchaseStuff<'a> {
+	fn add_charge(self, charge_data: ChargeData<'a>);
+	fn add_expense(self, expense_data: ExpenseData<'a>);
+	fn add_associated_transaction(self, transaction: Transaction<'a>);
 }
 
-impl PurchaseStuff for Rc<RefCell<Purchase<'_>>> {
+impl<'a> PurchaseStuff<'a> for Rc<RefCell<Purchase<'a>>> {
 	
-	fn add_charge(self, charge_data: ChargeData) {
+	fn add_charge(self, charge_data: ChargeData<'a>) {
 
-		let ref_cell_clone = Rc::clone(&self);
+		let ref_cell_clone: Rc<RefCell<Purchase>> = Rc::clone(&self);
 
 		self.borrow_mut().charges.push(Charge {
 			name: charge_data.name,
@@ -48,7 +48,7 @@ impl PurchaseStuff for Rc<RefCell<Purchase<'_>>> {
 		});
 	}
 
-	fn add_expense<'a>(self, expense_data: ExpenseData<'a>) {
+	fn add_expense(self, expense_data: ExpenseData<'a>) {
 		
 		let ref_cell_clone = Rc::clone(&self);
 
@@ -60,7 +60,7 @@ impl PurchaseStuff for Rc<RefCell<Purchase<'_>>> {
 		});
 	}
 
-	fn add_associated_transaction<'a>(self, transaction: Transaction<'a>) {
+	fn add_associated_transaction(self, transaction: Transaction<'a>) {
 		self.borrow_mut().associated_transactions.push(transaction);
 	}
 
