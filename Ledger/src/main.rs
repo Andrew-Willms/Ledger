@@ -3,8 +3,9 @@ use std::rc::Rc;
 use chrono::{DateTime, Utc};
 use rust_decimal::{Decimal};
 use crate::purchase::{Purchase, PurchaseStuff};
-mod purchase;
 
+mod purchase;
+mod application;
 
 fn main() {
 	
@@ -31,6 +32,15 @@ fn main() {
 	
 	test_purchase.clone().add_charge(charge_data);
 	test_purchase.clone().add_expense(expense_data);
+	
+	let test_transaction: Transaction = Transaction::Income(Income {
+		name: "income name".to_string(),
+		account: &account,
+		date: Utc::now(),
+		amount: Decimal::new(1, 0)
+	});
+	
+	test_purchase.clone().add_associated_transaction(test_transaction)
 }
 
 struct Institution {
