@@ -1,7 +1,8 @@
-use std::cell::{RefCell};
+use std::cell::RefCell;
 use std::rc::Rc;
 use chrono::{DateTime, Utc};
-use crate::{Charge, ChargeData, Expense, ExpenseData, Merchant, Transaction};
+use crate::{Charge, ChargeData, Expense, ExpenseData, Transaction};
+use crate::merchant::Merchant;
 
 pub(crate) struct Purchase<'a> {
 	pub name: String,
@@ -26,13 +27,13 @@ pub fn create<'a>(name: String, merchant: Option<&'a Merchant<'a>>, date: DateTi
 	Rc::new(RefCell::new(purchase))
 }
 
-pub trait PurchaseStuff<'a> {
+pub trait MutablePurchase<'a> {
 	fn add_charge(self, charge_data: ChargeData<'a>);
 	fn add_expense(self, expense_data: ExpenseData<'a>);
 	fn add_associated_transaction(self, transaction: Transaction<'a>);
 }
 
-impl<'a> PurchaseStuff<'a> for Rc<RefCell<Purchase<'a>>> {
+impl<'a> MutablePurchase<'a> for Rc<RefCell<Purchase<'a>>> {
 	
 	fn add_charge(self, charge_data: ChargeData<'a>) {
 

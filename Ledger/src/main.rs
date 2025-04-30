@@ -1,11 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use chrono::{DateTime, Utc};
-use rust_decimal::{Decimal};
-use crate::purchase::{Purchase, PurchaseStuff};
+use rust_decimal::Decimal;
+use crate::purchase::{MutablePurchase, Purchase};
 
 mod purchase;
 mod application;
+mod merchant;
 
 fn main() {
 	
@@ -55,18 +56,6 @@ struct Account<'a> {
 struct Budget {
 	name: String,
 }
-
-struct MerchantFamily {
-	name: String
-}
-
-struct Merchant<'a> {
-	name: String,
-	merchant_family: Option<&'a MerchantFamily>,
-	address: Option<String>
-}
-
-
 
 
 struct Charge<'a> {
