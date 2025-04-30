@@ -7,6 +7,7 @@ use crate::purchase::{MutablePurchase, Purchase};
 mod purchase;
 mod application;
 mod merchant;
+mod transfers;
 
 fn main() {
 	
@@ -100,24 +101,6 @@ struct Item<'a> {
 	regular_price: Decimal,
 	sale_price: Decimal,
 	effective_price: Decimal
-}
-
-struct Transfer<'a> {
-	name: String,
-	date_initiated: DateTime<Utc>,
-	date_sent: DateTime<Utc>,
-	date_received: DateTime<Utc>,
-	source_account: &'a Account<'a>,
-	destination_account: &'a Account<'a>,
-	amount: Decimal
-}
-
-struct TransferBudget {
-	name: String,
-	date: DateTime<Utc>,
-	source_budget: Budget,
-	destination_budget: Budget,
-	amount: Decimal
 }
 
 struct Income<'a> {
