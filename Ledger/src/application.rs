@@ -1,7 +1,8 @@
 use rust_decimal::Decimal;
-use crate::{Account, Budget, Institution};
-use crate::merchant::{Merchant, MerchantFamily};
-use crate::purchase::Purchase;
+use crate::budget::Budget;
+use crate::domain::account::{Account, Institution};
+use crate::domain::merchant::Merchant;
+use crate::domain::purchase::Purchase;
 
 pub(crate) struct Application<'a> {
 	
@@ -11,11 +12,16 @@ pub(crate) struct Application<'a> {
 pub(crate) struct State<'a> {
 	
 	institutions: Vec<Institution>,
-	merchant_families: Vec<MerchantFamily>,
-	merchants: Vec<Merchant<'a>>,
+	archived_institutions: Vec<Institution>,
+	
+	merchants: Vec<Merchant>,
+	archived_merchants: Vec<Merchant>,
 	
 	budgets: Vec<(Budget, Decimal)>,
-	account: Vec<(Account<'a>, Decimal)>,
+	archived_budgets: Vec<Budget>,
+	
+	account: Vec<(Account, Decimal)>,
+	archived_accounts: Vec<Account>,
 	
 	history: Vec<Purchase<'a>>
 }
@@ -31,35 +37,18 @@ impl<'a> Application<'a> {
 	fn add_institution(mut self, institution: Institution) {
 		self.state.institutions.push(institution);
 	}
+	fn archive_institution() {}
+	fn delete_institution() {}
 	
-	fn archive_institution() {
+	fn add_account() {}
+	fn archive_account() {}
+	fn delete_account() {}
+	fn rename_account() {}
+	fn change_account_institution() {}
 	
-	}
-	
-	fn delete_institution() {
-	
-	}
-	
-	
-	
-	fn add_budget() {
-	
-	}
-	
-	fn add_account() {
-	
-	}
-	
-	fn
-
-	
-	
-}
-
-trait DataStore {
-	
-	fn get_accounts<'a>() -> Vec<Account<'a>>;
-	
-	
-	
+	fn add_budget() {}
+	fn archive_budget() {}
+	fn delete_budget() {}
+	fn rename_budget() {}
+	fn change_budget_parent() {}
 }

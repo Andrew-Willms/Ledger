@@ -1,19 +1,21 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use chrono::{DateTime, Utc};
-use crate::{Charge, ChargeData, Expense, ExpenseData, Transaction};
-use crate::merchant::Merchant;
+use crate::domain::transaction::Transaction;
+use crate::domain::charge::{Charge, ChargeData};
+use crate::domain::expense::{Expense, ExpenseData};
+use crate::domain::merchant::Merchant;
 
 pub(crate) struct Purchase<'a> {
 	pub name: String,
-	merchant: Option<&'a Merchant<'a>>,
+	merchant: Option<&'a Merchant>,
 	date: DateTime<Utc>,
 	pub charges: Vec<Charge<'a>>,
 	expenses: Vec<Expense<'a>>,
 	associated_transactions: Vec<Transaction<'a>>
 }
 
-pub fn create<'a>(name: String, merchant: Option<&'a Merchant<'a>>, date: DateTime<Utc>) -> Rc<RefCell<Purchase<'a>>> {
+pub fn create(name: String, merchant: Option<&Merchant>, date: DateTime<Utc>) -> Rc<RefCell<Purchase>> {
 	
 	let purchase = Purchase {
 		name,
