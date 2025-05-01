@@ -7,7 +7,7 @@ pub struct Budget {
 	children: Vec<Budget>
 }
 
-pub fn create(name: String, parent: Option<Rc<RefCell<Budget>>>, children: Vec<Budget>) -> Budget {
+pub fn new(name: String, parent: Option<Rc<RefCell<Budget>>>, children: Vec<Budget>) -> Budget {
 	return Budget {
 		name,
 		parent,

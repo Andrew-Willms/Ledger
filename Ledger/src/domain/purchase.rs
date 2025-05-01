@@ -15,7 +15,7 @@ pub(crate) struct Purchase<'a> {
 	associated_transactions: Vec<Transaction<'a>>
 }
 
-pub fn create(name: String, merchant: Option<&Merchant>, date: DateTime<Utc>) -> Rc<RefCell<Purchase>> {
+pub fn new(name: String, merchant: Option<&Merchant>, date: DateTime<Utc>) -> Rc<RefCell<Purchase>> {
 	
 	let purchase = Purchase {
 		name,

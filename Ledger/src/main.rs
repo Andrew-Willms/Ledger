@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use chrono::Utc;
+use eframe::{egui, AppCreator, CreationContext, NativeOptions};
 use rust_decimal::Decimal;
 use crate::domain::{budget};
 use crate::domain::account::{Account};
@@ -21,15 +22,49 @@ fn main() {
 	
 	println!("Hello, world!");
 	
-	let test_purchase: Rc<RefCell<Purchase>> = domain::purchase::create("name".to_string(), None, Utc::now());
+	let app_name: &String = &"My egui App".to_string();
+	let native_options: NativeOptions = NativeOptions::default();
+	let app_creator: AppCreator = Box::new(|cc: &CreationContext| Ok(Box::new(MyEguiApp::new(cc))));
+	let result: eframe::Result = eframe::run_native(app_name, native_options, app_creator);
+	
+}
 
+#[derive(Default)]
+struct MyEguiApp {}
+
+impl MyEguiApp {
+	fn new(creation_context: &CreationContext<'_>) -> Self {
+		// Customize egui here with cc.egui_ctx.set_fonts and cc.egui_ctx.set_visuals.
+		// Restore app state using cc.storage (requires the "persistence" feature).
+		// Use the cc.gl (a glow::Context) to create graphics shaders and buffers that you can use
+		// for e.g. egui::PaintCallback.
+		Self::default()
+	}
+}
+
+impl eframe::App for MyEguiApp {
+	
+	fn update(&mut self, context: &egui::Context, frame: &mut eframe::Frame) {
+		
+		egui::CentralPanel::default().show(context, |ui: &mut egui::Ui| {
+			
+			ui.heading("Hello World!");
+			
+		});
+	}
+}
+
+
+fn stuff() {
+	let test_purchase: Rc<RefCell<Purchase>> = domain::purchase::new("name".to_string(), None, Utc::now());
+	
 	let account = Account {
 		name: "account name".to_string(),
 		institution: None
 	};
 	
-	let budget: Budget = budget::create("budget name".to_string(), None, vec![]);
-
+	let budget: Budget = budget::new("budget name".to_string(), None, vec![]);
+	
 	let charge_data = ChargeData {
 		name: "charge name".to_string(),
 		date_merchant_processed: Utc::now(),
@@ -37,7 +72,7 @@ fn main() {
 		account: &account,
 		amount: Decimal::new(1, 0),
 	};
-
+	
 	let expense_data = ExpenseData {
 		name: "".to_string(),
 		budget: &budget,
