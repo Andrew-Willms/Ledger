@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use chrono::Utc;
 use eframe::{egui, AppCreator, CreationContext, NativeOptions};
+use eframe::egui::{ScrollArea, TextStyle};
 use rust_decimal::Decimal;
 use crate::domain::{budget};
 use crate::domain::account::{Account};
@@ -26,11 +27,19 @@ fn main() {
 	let native_options: NativeOptions = NativeOptions::default();
 	let app_creator: AppCreator = Box::new(|cc: &CreationContext| Ok(Box::new(MyEguiApp::new(cc))));
 	let result: eframe::Result = eframe::run_native(app_name, native_options, app_creator);
-	
 }
 
-#[derive(Default)]
-struct MyEguiApp {}
+struct MyEguiApp {
+	values: Vec<u32>,
+}
+
+impl Default for MyEguiApp {
+	fn default() -> Self {
+		Self {
+			values: (1..(1 << 5)).collect(),
+		}
+	}
+}
 
 impl MyEguiApp {
 	fn new(creation_context: &CreationContext<'_>) -> Self {
@@ -49,6 +58,19 @@ impl eframe::App for MyEguiApp {
 		egui::CentralPanel::default().show(context, |ui: &mut egui::Ui| {
 			
 			ui.heading("Hello World!");
+			
+			let height = TextStyle::Body.resolve(ui.style()).size;
+			
+			ScrollArea::vertical().show_rows(ui, height, self.values.len(), |ui, row_range| {
+				
+				ui.allocate_space([ui.available_width(), 0.0].into());
+				for i in row_range {
+					let Some(value) = self.values.get(i) else {
+						continue;
+					};
+					ui.label(format!("{value:08x}"));
+				}
+			})
 			
 		});
 	}
